@@ -1,0 +1,6 @@
+tls:
+  stores:
+    default: {}
+  options:
+    default:
+      sniStrict: true

@@ -1,0 +1,55 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: traefik
+  labels:
+    app: traefik
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      containers:
+        - name: traefik
+          image: techniumlabs/traefik:2.0.4-r7
+          imagePullPolicy: Always
+          # securityContext:
+          #   runAsUser: 1000
+          args:
+            - --configFile=/etc/traefik/traefik.yaml
+          command:
+            - traefik
+          resources:
+            requests:
+              cpu: 250m
+              memory: 250Mi
+            limits:
+              cpu: 500m
+              memory: 500Mi
+          ports:
+            - name: web
+              containerPort: 8000
+            - name: websecure
+              containerPort: 8443
+            - name: admin
+              containerPort: 8080
+          volumeMounts:
+            - name: traefik-config
+              mountPath: /etc/traefik/traefik.yaml
+              subPath: traefik.yaml
+            - name: traefik-config
+              mountPath: /etc/traefik/dynamic.yaml
+              subPath: dynamic.yaml
+      volumes:
+        - name: traefik-config
+          configMap:
+            name: traefik-config
+      dnsConfig:
+        options:
+          - name: single-request-reopen

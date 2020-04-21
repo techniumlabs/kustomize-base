@@ -1,0 +1,16 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-admin
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`traefik.domain.com`)
+    kind: Rule
+    priority: 1
+    services:
+    - name: traefik-admin
+      port: 8080
+  tls:
+    secretName: traefik-admin

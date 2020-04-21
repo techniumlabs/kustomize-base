@@ -1,0 +1,23 @@
+api:
+  insecure: true
+  dashboard: true
+  debug: true
+
+accessLog: {}
+
+log:
+  level: info
+
+metrics:
+  prometheus: {}
+
+entryPoints:
+  web:
+    address: ":8000"
+  websecure:
+    address: ":8443"
+
+providers:
+  file:
+    filename: /etc/traefik/dynamic.yaml
+  kubernetescrd: {}
