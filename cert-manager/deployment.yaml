@@ -9,28 +9,33 @@ metadata:
     app: cainjector
     app.kubernetes.io/name: cainjector
     app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: "cainjector"
+    helm.sh/chart: cert-manager-v0.15.0
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cainjector
       app.kubernetes.io/name: cainjector
       app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/component: "cainjector"
   template:
     metadata:
       labels:
         app: cainjector
         app.kubernetes.io/name: cainjector
         app.kubernetes.io/instance: cert-manager
-      annotations:
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: "cainjector"
+        helm.sh/chart: cert-manager-v0.15.0
     spec:
       serviceAccountName: cert-manager-cainjector
       containers:
         - name: cert-manager
-          image: "quay.io/jetstack/cert-manager-cainjector:v0.13.0"
+          image: "quay.io/jetstack/cert-manager-cainjector:v0.15.0"
           imagePullPolicy: IfNotPresent
           args:
-          - --v=3
+          - --v=2
           - --leader-election-namespace=kube-system
           env:
           - name: POD_NAMESPACE
@@ -55,19 +60,25 @@ metadata:
     app: cert-manager
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: "controller"
+    helm.sh/chart: cert-manager-v0.15.0
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cert-manager
       app.kubernetes.io/name: cert-manager
       app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/component: "controller"
   template:
     metadata:
       labels:
         app: cert-manager
         app.kubernetes.io/name: cert-manager
         app.kubernetes.io/instance: cert-manager
+        app.kubernetes.io/component: "controller"
+        app.kubernetes.io/managed-by: Helm
+        helm.sh/chart: cert-manager-v0.15.0
       annotations:
         prometheus.io/path: "/metrics"
         prometheus.io/scrape: 'true'
@@ -76,17 +87,12 @@ spec:
       serviceAccountName: cert-manager
       containers:
         - name: cert-manager
-          image: "quay.io/jetstack/cert-manager-controller:v0.13.0"
+          image: "quay.io/jetstack/cert-manager-controller:v0.15.0"
           imagePullPolicy: IfNotPresent
           args:
-          - --v=3
+          - --v=2
           - --cluster-resource-namespace=$(POD_NAMESPACE)
           - --leader-election-namespace=kube-system
-          - --webhook-namespace=$(POD_NAMESPACE)
-          - --webhook-ca-secret=cert-manager-webhook-ca
-          - --webhook-serving-secret=cert-manager-webhook-tls
-          - --webhook-dns-names=cert-manager-webhook,cert-manager-webhook.cert-manager,cert-manager-webhook.cert-manager.svc
-          - --dns01-recursive-nameservers=8.8.8.8:53,1.1.1.1:53
           ports:
           - containerPort: 9402
             protocol: TCP
@@ -114,41 +120,54 @@ metadata:
     app: webhook
     app.kubernetes.io/name: webhook
     app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: "webhook"
+    helm.sh/chart: cert-manager-v0.15.0
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: webhook
       app.kubernetes.io/name: webhook
       app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/component: "webhook"
   template:
     metadata:
       labels:
         app: webhook
         app.kubernetes.io/name: webhook
         app.kubernetes.io/instance: cert-manager
-      annotations:
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: "webhook"
+        helm.sh/chart: cert-manager-v0.15.0
     spec:
       serviceAccountName: cert-manager-webhook
       containers:
         - name: cert-manager
-          image: "quay.io/jetstack/cert-manager-webhook:v0.13.0"
+          image: "quay.io/jetstack/cert-manager-webhook:v0.15.0"
           imagePullPolicy: IfNotPresent
           args:
-          - --v=3
+          - --v=2
           - --secure-port=10250
-          - --tls-cert-file=/certs/tls.crt
-          - --tls-private-key-file=/certs/tls.key
+          - --dynamic-serving-ca-secret-namespace=cert-manager
+          - --dynamic-serving-ca-secret-name=cert-manager-webhook-ca
+          - --dynamic-serving-dns-names=cert-manager-webhook,cert-manager-webhook.cert-manager,cert-manager-webhook.cert-manager.svc
+          ports:
+          - name: https
+            containerPort: 10250
           livenessProbe:
             httpGet:
               path: /livez
               port: 6080
               scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /healthz
               port: 6080
               scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
           env:
           - name: POD_NAMESPACE
             valueFrom:
@@ -161,11 +180,3 @@ spec:
             limits:
               cpu: 200m
               memory: 500Mi
-
-          volumeMounts:
-          - name: certs
-            mountPath: /certs
-      volumes:
-      - name: certs
-        secret:
-          secretName: cert-manager-webhook-tls

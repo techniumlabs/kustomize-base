@@ -1,6 +1,5 @@
 ---
 # Source: cert-manager/templates/service.yaml
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -10,6 +9,9 @@ metadata:
     app: cert-manager
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: "controller"
+    helm.sh/chart: cert-manager-v0.15.0
 spec:
   type: ClusterIP
   ports:
@@ -19,7 +21,7 @@ spec:
   selector:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
-
+    app.kubernetes.io/component: "controller"
 ---
 # Source: cert-manager/templates/webhook-service.yaml
 apiVersion: v1
@@ -31,6 +33,9 @@ metadata:
     app: webhook
     app.kubernetes.io/name: webhook
     app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: "webhook"
+    helm.sh/chart: cert-manager-v0.15.0
 spec:
   type: ClusterIP
   ports:
@@ -38,6 +43,6 @@ spec:
     port: 443
     targetPort: 10250
   selector:
-    app: webhook
     app.kubernetes.io/name: webhook
     app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/component: "webhook"

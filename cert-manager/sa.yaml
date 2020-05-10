@@ -7,26 +7,23 @@ metadata:
     app: cainjector
     app.kubernetes.io/name: cainjector
     app.kubernetes.io/instance: cert-manager
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.13.0
-
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: "cainjector"
+    helm.sh/chart: cert-manager-v0.15.0
 ---
-# Source: cert-manager/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: cert-manager
   namespace: "cert-manager"
-  annotations:
   labels:
     app: cert-manager
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.13.0
-
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: "controller"
+    helm.sh/chart: cert-manager-v0.15.0
 ---
-# Source: cert-manager/templates/webhook-serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -36,5 +33,6 @@ metadata:
     app: webhook
     app.kubernetes.io/name: webhook
     app.kubernetes.io/instance: cert-manager
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.13.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: "webhook"
+    helm.sh/chart: cert-manager-v0.15.0
