@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: consul-client
+  namespace: consul
+  labels:
+    app: consul
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: consul-server
+  namespace: consul
+  labels:
+    app: consul

@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: consul
+
+resources:
+  - psp.yaml
+  - pdb.yaml
+  - sa.yaml
+  - rbac.yaml
+  - service.yaml
+  - daemonset.yaml
+  - statefulset.yaml
+
+
+configMapGenerator:
+  - name: consul-client-config
+    files:
+      - files/client/extra-from-values.json
+  - name: consul-server-config
+    files:
+      - files/server/extra-from-values.json

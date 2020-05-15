@@ -1,0 +1,49 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: consul-client
+  labels:
+    app: consul
+rules: 
+- apiGroups:      ['extensions']
+  resources:      ['podsecuritypolicies']
+  verbs:          ['use']
+  resourceNames:  [consul-client]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: consul-server
+  labels:
+    app: consul
+rules: []
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: consul-client
+  labels:
+    app: consul
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: consul-client
+subjects:
+  - kind: ServiceAccount
+    name: consul-client
+    namespace: consul
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: consul-server
+  labels:
+    app: consul
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: consul-server
+subjects:
+  - kind: ServiceAccount
+    name: consul-server
+    namespace: consul
