@@ -1,55 +1,109 @@
-kind: Deployment
+---
+# Source: traefik/templates/deployment.yaml
 apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: traefik
+  name: default-traefik
   labels:
-    app: traefik
+    app.kubernetes.io/name: traefik
+    helm.sh/chart: traefik-9.8.1
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: default
+  annotations:
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: traefik
+      app.kubernetes.io/name: traefik
+      app.kubernetes.io/instance: default
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   template:
     metadata:
+      annotations:
       labels:
-        app: traefik
+        app.kubernetes.io/name: traefik
+        helm.sh/chart: traefik-9.8.1
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/instance: default
     spec:
-      serviceAccountName: traefik-ingress-controller
+      serviceAccountName: default-traefik
+      terminationGracePeriodSeconds: 60
+      hostNetwork: false
       containers:
-        - name: traefik
-          image: techniumlabs/traefik:2.0.4-r7
-          imagePullPolicy: Always
-          # securityContext:
-          #   runAsUser: 1000
-          args:
-            - --configFile=/etc/traefik/traefik.yaml
-          command:
-            - traefik
-          resources:
-            requests:
-              cpu: 250m
-              memory: 250Mi
-            limits:
-              cpu: 500m
-              memory: 500Mi
-          ports:
-            - name: web
-              containerPort: 8000
-            - name: websecure
-              containerPort: 8443
-            - name: admin
-              containerPort: 8080
-          volumeMounts:
-            - name: traefik-config
-              mountPath: /etc/traefik/traefik.yaml
-              subPath: traefik.yaml
-            - name: traefik-config
-              mountPath: /etc/traefik/dynamic.yaml
-              subPath: dynamic.yaml
+      - image: "traefik/traefik:2.2-r5"
+        imagePullPolicy: IfNotPresent
+        name: default-traefik
+        resources:
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 9000
+          failureThreshold: 1
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 9000
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        ports:
+        - name: "traefik"
+          containerPort: 9000
+          protocol: "TCP"
+        - name: "web"
+          containerPort: 8080
+          protocol: "TCP"
+        - name: "web-int"
+          containerPort: 9080
+          protocol: "TCP"
+        - name: "websecure"
+          containerPort: 8443
+          protocol: "TCP"
+        - name: "websecure-int"
+          containerPort: 9443
+          protocol: "TCP"
+        securityContext:
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+        volumeMounts:
+          - name: data
+            mountPath: /data
+          - name: tmp
+            mountPath: /tmp
+        args:
+          - "--api.insecure=true"
+          - "--entryPoints.traefik.address=:9000/tcp"
+          - "--entryPoints.web.address=:8080/tcp"
+          - "--entryPoints.web-int.address=:9080/tcp"
+          - "--entryPoints.websecure.address=:8443/tcp"
+          - "--entryPoints.websecure-int.address=:9443/tcp"
+          - "--api.dashboard=true"
+          - "--ping=true"
+          - "--providers.kubernetescrd"
+          - "--providers.kubernetesingress"
+          - "--log.level=INFO"
+          - "--accesslog=true"
+          - "--accesslog.fields.defaultmode=keep"
+          - "--accesslog.fields.headers.defaultmode=drop"
       volumes:
-        - name: traefik-config
-          configMap:
-            name: traefik-config
-      dnsConfig:
-        options:
-          - name: single-request-reopen
+        - name: data
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+      securityContext:
+        fsGroup: 65532

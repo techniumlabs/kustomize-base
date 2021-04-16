@@ -3,6 +3,8 @@ api:
   dashboard: true
   debug: true
 
+ping: true
+
 accessLog: {}
 
 log:
@@ -12,10 +14,16 @@ metrics:
   prometheus: {}
 
 entryPoints:
+  traefik:
+    address: ":9000"
   web:
     address: ":8000"
   websecure:
     address: ":8443"
+  web-int:
+    address: ":9080"
+  websecure-int:
+    address: ":9443"
 
 providers:
   file:
