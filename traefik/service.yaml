@@ -9,7 +9,7 @@ items:
       name: default-traefik
       labels:
         app.kubernetes.io/name: traefik
-        helm.sh/chart: traefik-9.8.1
+        helm.sh/chart: traefik-9.19.0
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: default
       annotations:
@@ -20,13 +20,13 @@ items:
         app.kubernetes.io/name: traefik
         app.kubernetes.io/instance: default
       ports:
-      - name: web
-        protocol: TCP
-        port: 80
-        targetPort: web
-        nodePort: 30665
-      - name: websecure
-        protocol: TCP
-        port: 443
-        targetPort: websecure
-        nodePort: 30675
+      - port: 80
+        name: web
+        targetPort: "web"
+        protocol: "TCP"
+        nodePort: 30101
+      - port: 443
+        name: websecure
+        targetPort: "websecure"
+        protocol: "TCP"
+        nodePort: 30100
