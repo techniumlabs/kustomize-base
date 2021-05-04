@@ -1,0 +1,96 @@
+---
+# Source: aws-load-balancer-controller/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: aws-load-balancer-controller-role
+  labels:
+    helm.sh/chart: aws-load-balancer-controller-1.1.6
+    app.kubernetes.io/name: aws-load-balancer-controller
+   aws-load-balancer-controller
+    app.kubernetes.io/version: "v2.1.3"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups: ["elbv2.k8s.aws"]
+  resources: [targetgroupbindings]
+  verbs: [create, delete, get, list, patch, update, watch]
+- apiGroups: [""]
+  resources: [events]
+  verbs: [create, patch]
+- apiGroups: [""]
+  resources: [pods]
+  verbs: [get, list, watch]
+- apiGroups: ["networking.k8s.io"]
+  resources: [ingressclasses]
+  verbs: [get, list, watch]
+- apiGroups: ["", "extensions", "networking.k8s.io"]
+  resources: [services, ingresses]
+  verbs: [get, list, patch, update, watch]
+- apiGroups: [""]
+  resources: [nodes, secrets, namespaces, endpoints]
+  verbs: [get, list, watch]
+- apiGroups: ["elbv2.k8s.aws", "", "extensions", "networking.k8s.io"]
+  resources: [targetgroupbindings/status, pods/status, services/status, ingresses/status]
+  verbs: [update, patch]
+---
+# Source: aws-load-balancer-controller/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: aws-load-balancer-controller-rolebinding
+  labels:
+    helm.sh/chart: aws-load-balancer-controller-1.1.6
+    app.kubernetes.io/name: aws-load-balancer-controller
+   aws-load-balancer-controller
+    app.kubernetes.io/version: "v2.1.3"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: aws-load-balancer-controller-role
+subjects:
+- kind: ServiceAccount
+  name: aws-load-balancer-controller
+  namespace: kube-system
+---
+# Source: aws-load-balancer-controller/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: aws-load-balancer-controller-leader-election-role
+  namespace: kube-system
+  labels:
+    helm.sh/chart: aws-load-balancer-controller-1.1.6
+    app.kubernetes.io/name: aws-load-balancer-controller
+   aws-load-balancer-controller
+    app.kubernetes.io/version: "v2.1.3"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups: [""]
+  resources: [configmaps]
+  verbs: [create]
+- apiGroups: [""]
+  resources: [configmaps]
+  resourceNames: [aws-load-balancer-controller-leader]
+  verbs: [get, patch, update]
+---
+# Source: aws-load-balancer-controller/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: aws-load-balancer-controller-leader-election-rolebinding
+  namespace: kube-system
+  labels:
+    helm.sh/chart: aws-load-balancer-controller-1.1.6
+    app.kubernetes.io/name: aws-load-balancer-controller
+   aws-load-balancer-controller
+    app.kubernetes.io/version: "v2.1.3"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: aws-load-balancer-controller-leader-election-role
+subjects:
+- kind: ServiceAccount
+  name: aws-load-balancer-controller
+  namespace: kube-system
