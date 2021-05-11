@@ -96,7 +96,7 @@ spec:
           - "--ping=true"
           - "--providers.kubernetescrd"
           - "--providers.kubernetesingress"
-          - "--log.level=INFO"
+          - "--log.level=DEBUG"
           - "--accesslog=true"
           - "--accesslog.fields.defaultmode=keep"
           - "--accesslog.fields.headers.defaultmode=drop"
