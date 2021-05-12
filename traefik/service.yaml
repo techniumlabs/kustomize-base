@@ -9,33 +9,24 @@ items:
       name: default-traefik
       labels:
         app.kubernetes.io/name: traefik
-        helm.sh/chart: traefik-9.8.1
+        helm.sh/chart: traefik-9.19.0
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: default
       annotations:
+        service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
     spec:
-      type: NodePort
+      type: LoadBalancer
       selector:
         app.kubernetes.io/name: traefik
         app.kubernetes.io/instance: default
       ports:
-      - port: 8080
+      - port: 80
         name: web
         targetPort: "web"
         protocol: "TCP"
         nodePort: 30101
-      - port: 9080
-        name: web-int
-        targetPort: "web-int"
-        protocol: "TCP"
-        nodePort: 30103
-      - port: 8443
+      - port: 443
         name: websecure
         targetPort: "websecure"
         protocol: "TCP"
         nodePort: 30100
-      - port: 9443
-        name: websecure-int
-        targetPort: "websecure-int"
-        protocol: "TCP"
-        nodePort: 30102

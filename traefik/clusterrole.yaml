@@ -6,7 +6,7 @@ metadata:
   name: default-traefik
   labels:
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-9.8.1
+    helm.sh/chart: traefik-9.19.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: default
 rules:
@@ -47,6 +47,7 @@ rules:
       - tlsoptions
       - tlsstores
       - traefikservices
+      - serverstransports
     verbs:
       - get
       - list

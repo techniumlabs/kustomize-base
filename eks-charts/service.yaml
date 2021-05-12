@@ -1,0 +1,20 @@
+---
+# Source: aws-load-balancer-controller/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: aws-load-balancer-webhook-service
+  namespace: kube-system
+  labels:
+    helm.sh/chart: aws-load-balancer-controller-1.1.6
+    app.kubernetes.io/name: aws-load-balancer-controller
+   aws-load-balancer-controller
+    app.kubernetes.io/version: "v2.1.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  ports:
+  - port: 443
+    targetPort: webhook-server
+  selector:
+    app.kubernetes.io/name: aws-load-balancer-controller
+   aws-load-balancer-controller

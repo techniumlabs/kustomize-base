@@ -6,7 +6,7 @@ metadata:
   name: default-traefik
   labels:
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-9.8.1
+    helm.sh/chart: traefik-9.19.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: default
   annotations:
@@ -21,12 +21,12 @@ spec:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 1
-  template:
+  template: 
     metadata:
       annotations:
       labels:
         app.kubernetes.io/name: traefik
-        helm.sh/chart: traefik-9.8.1
+        helm.sh/chart: traefik-9.19.0
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: default
     spec:
@@ -34,7 +34,7 @@ spec:
       terminationGracePeriodSeconds: 60
       hostNetwork: false
       containers:
-      - image: "traefik/traefik:2.2-r5"
+      - image: "traefik:2.4.8"
         imagePullPolicy: IfNotPresent
         name: default-traefik
         resources:
@@ -96,10 +96,12 @@ spec:
           - "--ping=true"
           - "--providers.kubernetescrd"
           - "--providers.kubernetesingress"
-          - "--log.level=INFO"
+          - "--log.level=DEBUG"
           - "--accesslog=true"
           - "--accesslog.fields.defaultmode=keep"
           - "--accesslog.fields.headers.defaultmode=drop"
+          - "--entrypoints.websecure.http.tls"
+          - "--providers.kubernetesIngress.ingressClass=traefik-cert-manager"
       volumes:
         - name: data
           emptyDir: {}
