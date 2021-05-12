@@ -1,0 +1,17 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: grafana-ingressroute
+spec:
+  routes:                           
+  - kind: Rule
+    match: Host(`grafana.sbox.example.io`)                   
+    services:                       
+    - kind: Service
+      name: service-grafana
+      namespace: grafana
+      passHostHeader: true
+      port: 80
+  tls:
+    secretName: secure-gamenginx-cert
+    
