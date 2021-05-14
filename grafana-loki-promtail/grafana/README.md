@@ -6,7 +6,8 @@
 
 # Postgres config
 
-    deployment.yaml
+    in deployment.yaml
+
     ```yaml
      spec:
       containers:
