@@ -6,7 +6,7 @@
 
 # Postgres config
 
-1. in deployment.yaml
+1. In deployment.yaml
 
     ```yaml
     
