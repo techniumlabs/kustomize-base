@@ -6,9 +6,10 @@
 
 # Postgres config
 
-    in deployment.yaml
+1. in deployment.yaml
 
     ```yaml
+    
      spec:
       containers:
         - name: grafana
