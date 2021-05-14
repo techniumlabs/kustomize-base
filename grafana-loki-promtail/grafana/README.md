@@ -16,7 +16,7 @@
           image: grafana/grafana
           env: 
           - name: "GF_DATABASE_URL"
-            value: "postgres://hostname:5432/database"
+            value: "postgres://username:passwor@hostname:5432/database"
           ports:
             - name: http
               containerPort: 3000
