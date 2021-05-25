@@ -33,6 +33,8 @@ spec:
       serviceAccountName: default-traefik
       terminationGracePeriodSeconds: 60
       hostNetwork: false
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
       containers:
       - image: "traefik:2.4.8"
         imagePullPolicy: IfNotPresent
