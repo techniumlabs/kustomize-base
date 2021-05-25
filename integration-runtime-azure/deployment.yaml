@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: integration-runtime
+  labels:
+    app: integration-runtime
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: integration-runtime
+      labels:
+        app: integration-runtime
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": windows
+      containers:
+      - name: integration-runtime
+        image: techniumlabsacr.azurecr.io/test
+        env:
+        - name: ENABLE_HA
+          value: "true"
+        - name: HA_PORT
+          value: "80"
+        - name: AUTH_KEY
+          value: ""
+        - name: NODE_NAME
+          value: "node_name"
+        resources:
+          limits:
+            cpu: 1
+            memory: 800M
+          requests:
+            cpu: .1
+            memory: 300M
+        ports:
+          - containerPort: 80
+  selector:
+    matchLabels:
+      app: integration-runtime
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: integration-runtime
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+  selector:
+    app: integration-runtime
