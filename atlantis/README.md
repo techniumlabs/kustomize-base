@@ -10,7 +10,10 @@
 ```
 3. Update webhook argument for repository in bundle.yaml file
 
-
 4. Run Kustomization file
 
         /atlantis$ kubectl apply -k ./ 
+        
+5. Added server url in repository webhook 
+     
+       URL http://<hostname>/events
