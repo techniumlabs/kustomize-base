@@ -13,4 +13,4 @@
 
 4. Run Kustomization file
 
-    /atlantis$ kubectl apply -k ./ 
+        /atlantis$ kubectl apply -k ./ 
