@@ -26,6 +26,9 @@ spec:
         image: runatlantis/atlantis:v0.17.0
         args:
           - "server"
+          # - "--gh-user='email@example.com'"
+          # - "--gh-token='sdfsdfdsfsdfsdfdsf'"
+          # - "--repo-allowlist='github.com/<user-name>/<repo-name>'"
           - "--azuredevops-webhook-user=atlantis"
           - "--azuredevops-token=434dffd35"
           - "--azuredevops-user=test@email.com"
