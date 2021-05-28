@@ -1,0 +1,24 @@
+---
+# Source: loki-distributed/templates/gateway/service-gateway.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: v1-loki-distributed-gateway
+  labels:
+    helm.sh/chart: loki-distributed-0.31.0
+    app.kubernetes.io/name: loki-distributed
+    app.kubernetes.io/instance: v1
+    app.kubernetes.io/version: "2.2.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: gateway
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: loki-distributed
+    app.kubernetes.io/instance: v1
+    app.kubernetes.io/component: gateway

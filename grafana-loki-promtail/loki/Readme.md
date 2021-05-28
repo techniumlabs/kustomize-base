@@ -15,29 +15,26 @@
 2. Add Role ARN in service account annotation.
    ```yaml
    annotations:
-     eks.amazonaws.com/role-arn: arn:aws:iam::4234234324:role/Loki
+     eks.amazonaws.com/role-arn: arn:aws:iam::5345435345:role/Loki
    ```
-3. In secret file copy encrypted code and decrpt it.
-4. And Change storage the configs in that decrypted yaml file.
+3. Change storage the configs in that configmap.yaml file.
 
    ```yml
-
-   schema_config:
-   configs:
-   - from: 2020-05-15
-       store: aws
-       object_store: s3
-       schema: v11
-       index:
-       prefix: loki
-   server:
-   http_listen_port: 3100
-   storage_config:
-   aws:
-       s3: "s3://us-east-1/loki-techniumlabs"
-       dynamodb:
-       dynamodb_url: "dynamodb://us-east-1"
+    schema_config:
+      configs:
+      - from: 2020-05-15
+        store: aws
+        object_store: s3
+        schema: v11
+        index:
+          prefix: loki
+    
+    storage_config:
+      aws:
+        s3: "s3://us-east-1/loki-techniumlabs"
+        dynamodb:
+         dynamodb_url: "dynamodb://us-east-1"
 
    ```
 
-5. Again Encrypt that yaml file and save it in secret file and install kustomization.
+5. Update datasource url in grafana with gateway url.
