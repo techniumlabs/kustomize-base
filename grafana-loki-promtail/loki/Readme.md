@@ -13,10 +13,12 @@
                }
    ```
 2. Add Role ARN in service account annotation.
+
    ```yaml
    annotations:
      eks.amazonaws.com/role-arn: arn:aws:iam::5345435345:role/Loki
    ```
+
 3. Change storage the configs in that configmap.yaml file.
 
    ```yml
@@ -37,4 +39,4 @@
 
    ```
 
-5. Update datasource url in grafana with gateway url.
+4. Update datasource url in grafana with gateway url.

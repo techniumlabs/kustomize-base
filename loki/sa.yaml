@@ -1,0 +1,17 @@
+---
+# Source: loki/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: loki
+  annotations:
+    {}
+  name: loki
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: promtail
+  name: promtail
