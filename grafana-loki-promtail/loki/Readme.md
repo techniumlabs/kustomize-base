@@ -40,3 +40,4 @@
    ```
 
 4. Update datasource url in grafana with gateway url.
+[flow](https://github.com/techniumlabs/kustomize-base/blob/master/grafana-loki-promtail/loki/file/flow%20drawing.svg)
