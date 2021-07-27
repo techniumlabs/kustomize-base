@@ -2,6 +2,6 @@
 
     
 
-    $ kubectl create namespace traefik
 
-    /traefik$ kubectl apply -k ./ -n traefik
+
+    /aws-node-termination-handler$ kubectl apply -k ./ 
