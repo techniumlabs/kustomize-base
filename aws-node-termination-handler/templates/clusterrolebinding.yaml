@@ -1,0 +1,14 @@
+---
+# Source: aws-node-termination-handler/templates/clusterrolebinding.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: v1-aws-node-termination-handler
+subjects:
+- kind: ServiceAccount
+  name: v1-aws-node-termination-handler
+  namespace: aws-node-termination-handler
+roleRef:
+  kind: ClusterRole
+  name: v1-aws-node-termination-handler
+  apiGroup: rbac.authorization.k8s.io
