@@ -1,0 +1,76 @@
+---
+# Source: aws-node-termination-handler/templates/psp.yaml
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: v1-aws-node-termination-handler
+  labels:
+    app.kubernetes.io/name: aws-node-termination-handler
+    helm.sh/chart: aws-node-termination-handler-0.15.1
+    app.kubernetes.io/instance: v1
+    k8s-app: aws-node-termination-handler
+    app.kubernetes.io/version: "1.13.1"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
+spec:
+  privileged: false
+  hostIPC: false
+  hostNetwork: true
+  hostPID: false
+  readOnlyRootFilesystem: false
+  allowPrivilegeEscalation: false
+  allowedCapabilities:
+    - '*'
+  fsGroup:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  volumes:
+    - '*'
+---
+# Source: aws-node-termination-handler/templates/psp.yaml
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: v1-aws-node-termination-handler-psp
+  namespace: aws-node-termination-handler
+  labels:
+    app.kubernetes.io/name: aws-node-termination-handler
+    helm.sh/chart: aws-node-termination-handler-0.15.1
+    app.kubernetes.io/instance: v1
+    k8s-app: aws-node-termination-handler
+    app.kubernetes.io/version: "1.13.1"
+    app.kubernetes.io/managed-by: Helm
+rules:
+  - apiGroups: ['policy']
+    resources: ['podsecuritypolicies']
+    verbs:     ['use']
+    resourceNames:
+      - v1-aws-node-termination-handler
+---
+# Source: aws-node-termination-handler/templates/psp.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: v1-aws-node-termination-handler-psp
+  namespace: aws-node-termination-handler
+  labels:
+    app.kubernetes.io/name: aws-node-termination-handler
+    helm.sh/chart: aws-node-termination-handler-0.15.1
+    app.kubernetes.io/instance: v1
+    k8s-app: aws-node-termination-handler
+    app.kubernetes.io/version: "1.13.1"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: v1-aws-node-termination-handler-psp
+subjects:
+  - kind: ServiceAccount
+    name: v1-aws-node-termination-handler
+    namespace: aws-node-termination-handler
