@@ -49,4 +49,4 @@ annotations:
 ----
 . Update datasource url in grafana with gateway url.
 
-image:loki-promtail-grafana:flow_drawing.svg
+image::loki-promtail-grafana:flow_drawing.svg[]
