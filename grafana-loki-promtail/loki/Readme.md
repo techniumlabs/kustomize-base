@@ -1,10 +1,12 @@
-# Installation
+# LOKI
+
+## Installation
 
     $ kubectl create namespace loki
 
     /loki$ kubectl apply -k ./ -n loki
 
-# S3 and DynamoDB config
+## S3 and DynamoDB config
 
 1. Create policy with s3 and dynamodb access and create Role with that policy and update trust relationship with service account name. [more](https://grafana.com/docs/loki/latest/operations/storage/)
    ```json

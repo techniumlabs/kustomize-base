@@ -1,0 +1,7 @@
+name: kustomize-base
+title: Kustomize Base
+version: 1.5.6
+start_page: ROOT:traefik.adoc
+nav:
+- modules/ROOT/nav.adoc
+- modules/loki-promtail-grafana/nav.adoc

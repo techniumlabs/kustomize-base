@@ -1,0 +1,4 @@
+* Loki setup
+** xref:loki.adoc[Loki]
+** xref:promtail.adoc[Promtail]
+** xref:grafana.adoc[Grafana]
